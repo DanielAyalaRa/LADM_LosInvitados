@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">LADM_U5_CENTROHITORICO_LOSINVENCIBLES</string>
+    <string name="titulo_lugares">Lugares</string>
+    <string name="titulo_inicio">Inicio</string>
+    <string name="titulo_galeria">Galeria</string>
+    <string-array name="categorias">
+        <item>Iglesia</item>
+        <item>Restaurante</item>
+        <item>Hotel</item>
+        <item>Museo</item>
+        <item>Hotele</item>
+        <item>Edificio</item>
+        <item>Tienda departamental</item>
+        <item>Plaza</item>
+        <item>Mercado</item>
+        <item>Café</item>
+        <item>Central de autobuses</item>
+    </string-array>
+</resources>

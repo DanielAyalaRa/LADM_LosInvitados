@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_inicio">
+
+    <fragment
+        android:id="@+id/navigation_lugares"
+        android:name="mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.ui.lugares.LugaresFragment"
+        android:label="@string/titulo_lugares"
+        tools:layout="@layout/fragment_lugares" />
+
+    <fragment
+        android:id="@+id/navigation_inicio"
+        android:name="mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.ui.inicio.InicioFragment"
+        android:label="@string/titulo_inicio"
+        tools:layout="@layout/fragment_inicio" />
+
+    <fragment
+        android:id="@+id/navigation_galeria"
+        android:name="mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.ui.galeria.GaleriaFragment"
+        android:label="@string/titulo_galeria"
+        tools:layout="@layout/fragment_galeria" />
+</navigation>
