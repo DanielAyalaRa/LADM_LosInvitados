@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "805439226322",
-    "project_id": "centrohistoricolosinvencibles",
-    "storage_bucket": "centrohistoricolosinvencibles.appspot.com"
+    "project_number": "367140355381",
+    "project_id": "ladmu5mapascentro",
+    "storage_bucket": "ladmu5mapascentro.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:805439226322:android:0b0d51d7645335965b480b",
+        "mobilesdk_app_id": "1:367140355381:android:f8f548b68d90c036ea607c",
         "android_client_info": {
           "package_name": "mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles"
         }
       },
       "oauth_client": [
         {
-          "client_id": "805439226322-3nas344m67glb3or75h4tiqf9vtp6aqb.apps.googleusercontent.com",
+          "client_id": "367140355381-l6ph66h0q3m9sbb38n7ubfhtidil3a94.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyB3SqkL1pViSnsQ-qsvwg1ybsy2aOlefuk"
+          "current_key": "AIzaSyA32VQbHlPZu2HVndQXY4uvXUc4k0myXZ4"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "805439226322-3nas344m67glb3or75h4tiqf9vtp6aqb.apps.googleusercontent.com",
+              "client_id": "367140355381-l6ph66h0q3m9sbb38n7ubfhtidil3a94.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

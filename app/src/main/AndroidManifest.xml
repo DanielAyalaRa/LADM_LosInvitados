@@ -16,9 +16,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LADM_U5_CENTROHITORICO_LOSINVENCIBLES">
-        <activity
-            android:name=".clases.AdaptadorCardView"
-            android:exported="false" />
         <!--
          TODO: Before you run your application, you need a Google Maps API key.
 
