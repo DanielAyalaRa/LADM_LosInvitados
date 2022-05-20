@@ -2,42 +2,56 @@ package mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.ui.lugares
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.location.LocationManager
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.ktx.Firebase
 import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.clases.Imagen
+import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.clases.Ubicacion2
 import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.databinding.FragmentLugaresBinding
+import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.ui.inicio.InicioFragment
 
 
 open class LugaresFragment : Fragment() {
 
-    private var _binding: FragmentLugaresBinding? = null
-    private val binding get() = _binding!!
+    var _binding: FragmentLugaresBinding? = null
+    val binding get() = _binding!!
     private val baseRemota = FirebaseFirestore.getInstance().collection("Lugares")
 
-    var listaImagenes = ArrayList<Imagen>()
     var contador = 0
     val REQUEST_IMAGE_CAPTURE = 1
+    lateinit var locacion : LocationManager
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val lugaresViewModel =
-            ViewModelProvider(this).get(LugaresViewModel::class.java)
         _binding = FragmentLugaresBinding.inflate(inflater, container, false)
         val root: View = binding.root
+
+        if(ActivityCompat.checkSelfPermission(requireContext(),android.Manifest.permission.ACCESS_FINE_LOCATION)== PackageManager.PERMISSION_DENIED){
+            ActivityCompat.requestPermissions(requireActivity(),
+                arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
+                InicioFragment.REQUEST_CODE_LOCATION
+            )
+        }//permisos
+
+        //Obtenemos del sistema el localizador GPS en tiempo real
+        locacion = requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        var ubi = Ubicacion2(this)
+        locacion.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 01f, ubi)
 
         binding.btnTomarFoto.setOnClickListener {
             if (contador == 2) {
