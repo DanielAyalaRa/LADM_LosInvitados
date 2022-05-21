@@ -3,13 +3,15 @@ package mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles
 import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentManager
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.databinding.ActivityMainBinding
+import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.ui.lugares.LugaresFragment
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), Comunicator {
 
     private lateinit var binding: ActivityMainBinding
 
@@ -30,5 +32,20 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
     }
+
+    override fun passData(coordenada: Double, coordenada2: Double) {
+        val bundle = Bundle()
+        bundle.putDouble("latitud",coordenada)
+        bundle.putDouble("longitud",coordenada2)
+        val transaction = this.supportFragmentManager.beginTransaction()
+        val placeFragment = LugaresFragment()
+        placeFragment.arguments = bundle
+        transaction.commit()
+    }
+}
+
+interface Comunicator {
+    fun passData(coordenada:Double,coordenada2: Double)
 }

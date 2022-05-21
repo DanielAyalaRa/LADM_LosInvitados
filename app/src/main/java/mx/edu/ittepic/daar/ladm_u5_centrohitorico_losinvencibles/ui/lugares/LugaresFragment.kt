@@ -21,7 +21,7 @@ import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.databinding.Fra
 import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.ui.inicio.InicioFragment
 
 
-open class LugaresFragment : Fragment() {
+class LugaresFragment : Fragment() {
 
     var _binding: FragmentLugaresBinding? = null
     val binding get() = _binding!!
@@ -30,6 +30,8 @@ open class LugaresFragment : Fragment() {
     var contador = 0
     val REQUEST_IMAGE_CAPTURE = 1
     lateinit var locacion : LocationManager
+    var latitudIn :Double? = 0.0
+    var longitudeIn :Double? = 0.0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,6 +53,13 @@ open class LugaresFragment : Fragment() {
         var ubi = Ubicacion(this)
         locacion.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 01f, ubi)
 
+        latitudIn = arguments?.getDouble("latitud")
+        longitudeIn = arguments?.getDouble("longitud")
+
+        binding.txtLatitud.setText(latitudIn.toString())
+        binding.txtLongitud.setText(longitudeIn.toString())
+        alerta("Latitud: $latitudIn \n$longitudeIn")
+
         binding.btnTomarFoto.setOnClickListener {
             if (contador == 2) {
                 alerta("Solo tienes permitido agregar 3 fotos")
@@ -61,26 +70,48 @@ open class LugaresFragment : Fragment() {
         }
 
         binding.btnInsertar.setOnClickListener {
-            val datos = hashMapOf(
-                "descripcion" to binding.txtDescripcion.text.toString(),
-                "latitud" to binding.txtLatitud.text.toString().toDouble(),
-                "longitud" to binding.txtLongitud.text.toString().toDouble(),
-                "lugar" to binding.txtLugar.text.toString()
-            )
-            baseRemota.add(datos)
-                .addOnSuccessListener {
-                    mensaje("Se guardo el lugar")
-                    binding.txtDescripcion.text?.clear()
-                    binding.txtLugar.text?.clear()
-                    binding.txtLatitud.text?.clear()
-                    binding.txtLongitud.text?.clear()
-                }
-                .addOnFailureListener {
-                    alerta("Error... \n${it.message}")
-                }
+            if(validarCampos()){
+                val datos = hashMapOf(
+                    "descripcion" to binding.txtDescripcion.text.toString(),
+                    "latitud" to binding.txtLatitud.text.toString().toDouble(),
+                    "longitud" to binding.txtLongitud.text.toString().toDouble(),
+                    "lugar" to binding.txtLugar.text.toString(),
+                    "categoria" to binding.txtCategoria.text.toString()
+                )
+                baseRemota.add(datos)
+                    .addOnSuccessListener {
+                        mensaje("Se guardo el lugar")
+                        binding.txtDescripcion.text?.clear()
+                        binding.txtLugar.text?.clear()
+                        binding.txtLatitud.text?.clear()
+                        binding.txtLongitud.text?.clear()
+                        binding.txtCategoria.text?.clear()
+                    }
+                    .addOnFailureListener {
+                        alerta("Error... \n${it.message}")
+                    }
+            }// final del if para ingresar campos
+            alerta("Campos vacios... revisalos")
+            return@setOnClickListener
         }
 
         return root
+    }
+
+    private fun validarCampos(): Boolean {
+        val lugar = binding.txtLugar.text
+        val descripcion = binding.txtDescripcion.text
+        val categoria = binding.txtCategoria.text
+        val lat = binding.txtLatitud.text
+        val long = binding.txtLongitud.text
+        if((lugar.toString().isEmpty() || lugar.toString().isBlank()) && (descripcion.toString().isEmpty() || descripcion.toString().isBlank()) &&
+                (categoria.toString().isEmpty() || categoria.toString().isBlank())){
+            return false
+        }
+        if(lat.toString().isEmpty() || lat.toString().isBlank()) return false
+        if(long.toString().isEmpty() || long.toString().isBlank()) return false
+
+        return true
     }
 
     private fun dispararFoto() {

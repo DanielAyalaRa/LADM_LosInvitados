@@ -7,7 +7,8 @@
     android:orientation="vertical"
     android:padding="10dp"
     android:paddingTop="0dp"
-    tools:context=".ui.lugares.LugaresFragment">
+    tools:context=".ui.lugares.LugaresFragment"
+    android:id="@+id/fragLugares">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -18,13 +19,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Registro Lugares"
-                android:textAlignment="center"
-                android:textSize="26sp" />
 
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -57,6 +51,22 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Categoria"
+                android:padding="5dp"
+                app:startIconDrawable="@drawable/ic_baseline_category_24">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txtCategoria"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -75,7 +85,8 @@
                         android:id="@+id/txtLatitud"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="18sp" />
+                        android:textSize="18sp"
+                        android:inputType="numberDecimal"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -90,7 +101,8 @@
                         android:id="@+id/txtLongitud"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="18sp" />
+                        android:textSize="18sp"
+                        android:inputType="numberDecimal"/>
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
 
