@@ -79,6 +79,8 @@ class InicioFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationBut
         crearMarcador()
         map.setOnMyLocationButtonClickListener(this)
         map.setOnMyLocationClickListener(this)
+        map.uiSettings.isZoomControlsEnabled = true
+        map.uiSettings.isCompassEnabled = true
         enableLocation()
     }
 
