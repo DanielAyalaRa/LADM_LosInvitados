@@ -9,20 +9,6 @@
     android:paddingTop="0dp"
     tools:context=".ui.inicio.InicioFragment">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="16dp"
-        android:text="Coordenadas: "
-        android:id="@+id/txtCoordenadas"/>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="16dp"
-        android:text="Donde estas: "
-        android:id="@+id/txtActual"/>
-
     <fragment
         android:layout_width="match_parent"
         android:layout_height="match_parent"

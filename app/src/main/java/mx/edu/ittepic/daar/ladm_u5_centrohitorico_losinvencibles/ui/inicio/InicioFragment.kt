@@ -18,10 +18,13 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.firebase.firestore.FirebaseFirestore
 import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.R
 import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.clases.Data
+import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.clases.Lugares
 import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.clases.Ubicacion
 import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.databinding.FragmentInicioBinding
 
@@ -33,9 +36,9 @@ class InicioFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationBut
         const val REQUEST_CODE_LOCATION = 0
     }
 
+    private val baseRemota = FirebaseFirestore.getInstance().collection("Lugares")
+    var listaId = ArrayList<String>()
     lateinit var map:GoogleMap
-    var position = ArrayList<Data>()
-    lateinit var locacion : LocationManager
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,11 +53,6 @@ class InicioFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationBut
             ActivityCompat.requestPermissions(requireActivity(),
                 arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),REQUEST_CODE_LOCATION)
         }//permisos
-
-        //Obtenemos del sistema el localizador GPS en tiempo real
-        locacion = requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        var ubi = Ubicacion(this)
-        locacion.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 01f, ubi)
 
         crearMapFragment()
 
@@ -78,19 +76,40 @@ class InicioFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationBut
     }
 
     fun crearMarcador() {
-        var miUbi = LatLng(21.50718, -104.89303)
-        //Crear punto
-        map.addMarker(
-            MarkerOptions()
-                .position(miUbi)
-                .title("Aqui estoy")
-                .snippet("Información Extra")
-                //.icon() Podemos agregar iconos personalizados
-        )
-        //Animacion de Zoom a la ubicacion seleccionada
+        baseRemota
+            .addSnapshotListener { query, error ->
+                if (error != null) {
+                    mensaje(error.message!!)
+                    return@addSnapshotListener
+                }
+                listaId.clear()
+                var lugar = Lugares(requireContext())
+
+                for (documento in query!!) {
+                    lugar.lugar = documento.getString("lugar").toString()
+                    lugar.descripcion = documento.getString("descripcion").toString()
+                    lugar.categoria = documento.getString("categoria").toString()
+                    lugar.latitud = documento.getDouble("latitud")!!
+                    lugar.longitud = documento.getDouble("longitud")!!
+
+                    var Ubi = LatLng(lugar.latitud, lugar.longitud)
+
+                    map.addMarker(
+                        MarkerOptions()
+                            .position(Ubi)
+                            .title(lugar.lugar)
+                            .snippet(lugar.descripcion)
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.plaza))
+                            // TODO Aqui hariamos un when para separar cada una de las categorias
+                    )
+                    listaId.add(documento.id.toString())
+                }
+            }
+
+        var miUbi = LatLng(21.5118208586, -104.891989711)
         map.animateCamera(CameraUpdateFactory
             .newLatLngZoom(miUbi,18f),2000,null)
-
+        // Hacemos un zoom a la plaza principal de Tepic
     }
 
     override fun onMyLocationButtonClick(): Boolean {

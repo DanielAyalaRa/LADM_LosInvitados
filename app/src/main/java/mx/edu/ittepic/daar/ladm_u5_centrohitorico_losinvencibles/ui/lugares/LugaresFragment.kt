@@ -15,10 +15,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.firestore.FirebaseFirestore
-import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.clases.Imagen
-import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.clases.Ubicacion2
+import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.clases.Ubicacion
 import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.databinding.FragmentLugaresBinding
 import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.ui.inicio.InicioFragment
 
@@ -50,7 +48,7 @@ open class LugaresFragment : Fragment() {
 
         //Obtenemos del sistema el localizador GPS en tiempo real
         locacion = requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        var ubi = Ubicacion2(this)
+        var ubi = Ubicacion(this)
         locacion.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 01f, ubi)
 
         binding.btnTomarFoto.setOnClickListener {
