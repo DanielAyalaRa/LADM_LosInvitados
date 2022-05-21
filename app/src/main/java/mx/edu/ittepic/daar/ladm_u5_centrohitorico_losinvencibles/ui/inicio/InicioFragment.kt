@@ -2,8 +2,8 @@ package mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.ui.inicio
 
 import android.Manifest
 import android.app.AlertDialog
-import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
@@ -14,11 +14,11 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.setFragmentResultListener
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
@@ -27,7 +27,6 @@ import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.Comunicator
 import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.R
 import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.clases.Data
 import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.clases.Lugares
-import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.clases.Ubicacion
 import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.databinding.FragmentInicioBinding
 
 class InicioFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener {
@@ -102,13 +101,28 @@ class InicioFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationBut
                     lugar.longitud = documento.getDouble("longitud")!!
 
                     var Ubi = LatLng(lugar.latitud, lugar.longitud)
+                    var icono = BitmapDescriptorFactory.fromResource(R.drawable.marcador)
+
+                    when(lugar.categoria) {
+                        "Iglesias" -> icono = BitmapDescriptorFactory.fromResource(R.drawable.iglesia)
+                        "Iglesia" -> icono = BitmapDescriptorFactory.fromResource(R.drawable.iglesia)
+                        "Restaurantes" -> icono = BitmapDescriptorFactory.fromResource(R.drawable.restaurante)
+                        "Hoteles" -> icono = BitmapDescriptorFactory.fromResource(R.drawable.hotel)
+                        "Plaza" -> icono = BitmapDescriptorFactory.fromResource(R.drawable.plaza)
+                        "Museos" -> icono = BitmapDescriptorFactory.fromResource(R.drawable.museo)
+                        "Edificios Administrativos" -> icono = BitmapDescriptorFactory.fromResource(R.drawable.edificio)
+                        "Tiendas Departamentales" -> icono = BitmapDescriptorFactory.fromResource(R.drawable.tienda)
+                        "Central" -> icono = BitmapDescriptorFactory.fromResource(R.drawable.bus)
+                        else -> BitmapDescriptorFactory.fromResource(R.drawable.marcador)
+                    }
+
 
                     map.addMarker(
                         MarkerOptions()
                             .position(Ubi)
                             .title(lugar.lugar)
                             .snippet(lugar.descripcion)
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.plaza))
+                            .icon(icono)
                             // TODO Aqui hariamos un when para separar cada una de las categorias
                     )
                     listaId.add(documento.id.toString())
