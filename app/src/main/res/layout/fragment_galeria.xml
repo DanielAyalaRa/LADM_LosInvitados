@@ -9,20 +9,34 @@
     android:padding="20dp"
     tools:context=".ui.galeria.GaleriaFragment">
 
-    <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp"
-        app:startIconDrawable="@drawable/ic_baseline_search_24"
-        android:hint="Buscar">
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="280dp"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:id="@+id/txtLatitud"/>
-    </com.google.android.material.textfield.TextInputLayout>
+            android:padding="5dp"
+            app:startIconDrawable="@drawable/ic_baseline_search_24"
+            android:hint="Buscar">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:id="@+id/txtLatitud"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <ImageButton
+            android:layout_width="80dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_baseline_search_24"
+            android:backgroundTint="@color/purple_200"
+            android:id="@+id/buscar"/>
+    </LinearLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
@@ -40,22 +54,9 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <androidx.cardview.widget.CardView
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:layout_gravity="center"
-        card_view:cardBackgroundColor="@color/purple_200"
-        card_view:cardElevation="6dp"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        card_view:cardCornerRadius="5dp">
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp"
-            android:src="@drawable/mapa1"
-            android:id="@+id/listaFoto"/>
-    </androidx.cardview.widget.CardView>
-
+        android:layout_height="480dp"/>
 
 </LinearLayout>

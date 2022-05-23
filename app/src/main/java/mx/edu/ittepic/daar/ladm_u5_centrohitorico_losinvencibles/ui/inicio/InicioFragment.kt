@@ -26,7 +26,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.Comunicator
 import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.R
 import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.clases.Data
-import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.clases.Lugares
+import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.clases.Lugar
 import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.databinding.FragmentInicioBinding
 
 class InicioFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener {
@@ -91,7 +91,7 @@ class InicioFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationBut
                     return@addSnapshotListener
                 }
                 listaId.clear()
-                val lugar = Lugares(requireContext())
+                val lugar = Lugar(requireContext())
 
                 for (documento in query!!) {
                     lugar.lugar = documento.getString("lugar").toString()
