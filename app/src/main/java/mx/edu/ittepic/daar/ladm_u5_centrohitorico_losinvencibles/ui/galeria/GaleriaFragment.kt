@@ -22,6 +22,7 @@ class GaleriaFragment : Fragment() {
     private val binding get() = _binding!!
     private val baseRemota = FirebaseFirestore.getInstance().collection("Lugares")
     var vectorLugares = ArrayList<Lugar>()
+    private var contador = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -63,12 +64,43 @@ class GaleriaFragment : Fragment() {
         val arrayAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_item, categoria)
         binding.spCategoria.setAdapter(arrayAdapter)
 
+        binding.buscar.setOnClickListener {
+            hacerFiltro(binding.spCategoria.text.toString())
+        }
+
         return root
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun hacerFiltro(buscar : String) {
+        var filtroVector = ArrayList<Lugar>()
+        filtroVector.clear()
+        contador = 0
+
+        (0..vectorLugares.size-1).forEach {
+            if (vectorLugares.get(it).categoria.equals(buscar)) {
+                filtroVector.add(vectorLugares.get(it))
+                contador++
+            }
+            if ("Categoria" == buscar) {
+                filtroVector.add(vectorLugares.get(it))
+                contador++
+            }
+            if ("Todos" == buscar) {
+                filtroVector.add(vectorLugares.get(it))
+                contador++
+            }
+        }
+
+        val adapter = CustomAdapter(filtroVector)
+        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclerView.adapter = adapter
+
+        binding.resultadosBusqueda.setText("Resultados: ${contador}")
     }
 
     fun mensaje(cadena : String) {

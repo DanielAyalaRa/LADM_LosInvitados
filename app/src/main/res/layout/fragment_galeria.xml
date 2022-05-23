@@ -16,47 +16,43 @@
         android:orientation="horizontal">
 
         <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="280dp"
             android:layout_height="wrap_content"
-            android:padding="5dp"
-            app:startIconDrawable="@drawable/ic_baseline_search_24"
-            android:hint="Buscar">
-
-            <com.google.android.material.textfield.TextInputEditText
+            android:hint="Filtro"
+            android:padding="2dp"
+            app:startIconDrawable="@drawable/ic_baseline_location_on_24">
+            <AutoCompleteTextView
+                android:id="@+id/spCategoria"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:id="@+id/txtLatitud"/>
+                android:layout_height="match_parent"
+                android:inputType="none"
+                android:text="Categoria"/>
+
         </com.google.android.material.textfield.TextInputLayout>
 
         <ImageButton
-            android:layout_width="80dp"
-            android:layout_height="50dp"
-            android:src="@drawable/ic_baseline_search_24"
-            android:backgroundTint="@color/purple_200"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:scaleY="0.8"
+            android:scaleX="0.8"
+            android:src="@drawable/lupa"
+            android:background="@color/colorCrema"
             android:id="@+id/buscar"/>
     </LinearLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Filtro"
-        app:startIconDrawable="@drawable/ic_baseline_location_on_24"
-        android:layout_marginBottom="10dp">
-        <AutoCompleteTextView
-            android:id="@+id/spCategoria"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:inputType="none"
-            android:text="Categoria"/>
-
-    </com.google.android.material.textfield.TextInputLayout>
+        android:layout_marginTop="5dp"
+        android:id="@+id/resultadosBusqueda"
+        android:text="No. Resultados: "/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="480dp"/>
+        android:layout_marginTop="15dp"
+        android:layout_height="560dp"/>
 
 </LinearLayout>

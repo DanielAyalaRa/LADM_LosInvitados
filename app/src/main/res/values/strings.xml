@@ -4,15 +4,16 @@
     <string name="titulo_inicio">Inicio</string>
     <string name="titulo_galeria">Galeria</string>
     <string-array name="categorias">
-        <item>Iglesia</item>
-        <item>Restaurante</item>
-        <item>Hotel</item>
-        <item>Museo</item>
-        <item>Edificio</item>
-        <item>Tienda departamental</item>
-        <item>Plaza</item>
-        <item>Mercado</item>
-        <item>Café</item>
-        <item>Central de autobuses</item>
+        <item>Todos</item>
+        <item>Iglesias</item>
+        <item>Restaurantes</item>
+        <item>Hoteles</item>
+        <item>Museos</item>
+        <item>Edificios Administrativos</item>
+        <item>Tiendas Departamentales</item>
+        <item>Plazas</item>
+        <item>Mercados</item>
+        <item>Cafes</item>
+        <item>Centrales</item>
     </string-array>
 </resources>
