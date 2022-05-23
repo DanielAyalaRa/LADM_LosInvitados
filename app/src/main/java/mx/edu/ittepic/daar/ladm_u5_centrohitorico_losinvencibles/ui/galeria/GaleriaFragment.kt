@@ -59,10 +59,7 @@ class GaleriaFragment : Fragment() {
                 binding.recyclerView.adapter = adapter
             }
 
-        // Agregar elementos de filtro
-        val categoria = resources.getStringArray(R.array.categorias)
-        val arrayAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_item, categoria)
-        binding.spCategoria.setAdapter(arrayAdapter)
+        spCategoria()
 
         binding.buscar.setOnClickListener {
             hacerFiltro(binding.spCategoria.text.toString())
@@ -74,6 +71,13 @@ class GaleriaFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun spCategoria() {
+        // Agregar elementos de filtro
+        val categoria = resources.getStringArray(R.array.categorias)
+        val arrayAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_item, categoria)
+        binding.spCategoria.setAdapter(arrayAdapter)
     }
 
     private fun hacerFiltro(buscar : String) {
@@ -101,6 +105,12 @@ class GaleriaFragment : Fragment() {
         binding.recyclerView.adapter = adapter
 
         binding.resultadosBusqueda.setText("Resultados: ${contador}")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.spCategoria.setText("Todos")
+        spCategoria()
     }
 
     fun mensaje(cadena : String) {
