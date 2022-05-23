@@ -58,7 +58,7 @@ class LugaresFragment : Fragment() {
 
         binding.txtLatitud.setText(latitudIn.toString())
         binding.txtLongitud.setText(longitudeIn.toString())
-        alerta("Latitud: $latitudIn \n$longitudeIn")
+        //alerta("Latitud: $latitudIn \n$longitudeIn")
 
         binding.btnTomarFoto.setOnClickListener {
             if (contador == 2) {

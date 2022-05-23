@@ -91,7 +91,7 @@ class InicioFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationBut
                     return@addSnapshotListener
                 }
                 listaId.clear()
-                var lugar = Lugares(requireContext())
+                val lugar = Lugares(requireContext())
 
                 for (documento in query!!) {
                     lugar.lugar = documento.getString("lugar").toString()
@@ -100,36 +100,35 @@ class InicioFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationBut
                     lugar.latitud = documento.getDouble("latitud")!!
                     lugar.longitud = documento.getDouble("longitud")!!
 
-                    var Ubi = LatLng(lugar.latitud, lugar.longitud)
+                    val Ubi = LatLng(lugar.latitud, lugar.longitud)
                     var icono = BitmapDescriptorFactory.fromResource(R.drawable.marcador)
 
                     when(lugar.categoria) {
                         "Iglesias" -> icono = BitmapDescriptorFactory.fromResource(R.drawable.iglesia)
-                        "Iglesia" -> icono = BitmapDescriptorFactory.fromResource(R.drawable.iglesia)
                         "Restaurantes" -> icono = BitmapDescriptorFactory.fromResource(R.drawable.restaurante)
                         "Hoteles" -> icono = BitmapDescriptorFactory.fromResource(R.drawable.hotel)
-                        "Plaza" -> icono = BitmapDescriptorFactory.fromResource(R.drawable.plaza)
+                        "Plazas" -> icono = BitmapDescriptorFactory.fromResource(R.drawable.plaza)
                         "Museos" -> icono = BitmapDescriptorFactory.fromResource(R.drawable.museo)
                         "Edificios Administrativos" -> icono = BitmapDescriptorFactory.fromResource(R.drawable.edificio)
                         "Tiendas Departamentales" -> icono = BitmapDescriptorFactory.fromResource(R.drawable.tienda)
-                        "Central" -> icono = BitmapDescriptorFactory.fromResource(R.drawable.bus)
+                        "Centrales" -> icono = BitmapDescriptorFactory.fromResource(R.drawable.bus)
+                        "Cafes" -> icono = BitmapDescriptorFactory.fromResource(R.drawable.cafe)
+                        "Mercados" -> icono = BitmapDescriptorFactory.fromResource(R.drawable.mercado)
                         else -> BitmapDescriptorFactory.fromResource(R.drawable.marcador)
                     }
-
-
                     map.addMarker(
                         MarkerOptions()
                             .position(Ubi)
                             .title(lugar.lugar)
                             .snippet(lugar.descripcion)
                             .icon(icono)
-                            // TODO Aqui hariamos un when para separar cada una de las categorias
+                            // TODO Aqui hariamos un when para separar cada una de las categorias (CHECK)
                     )
                     listaId.add(documento.id.toString())
                 }
             }
 
-        var miUbi = LatLng(21.5118208586, -104.891989711)
+        val miUbi = LatLng(21.5118208586, -104.891989711)
         map.animateCamera(CameraUpdateFactory
             .newLatLngZoom(miUbi,18f),2000,null)
         // Hacemos un zoom a la plaza principal de Tepic
