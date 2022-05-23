@@ -77,7 +77,7 @@ class LugaresFragment : Fragment() {
                     "longitud" to binding.txtLongitud.text.toString().toDouble(),
                     "lugar" to binding.txtLugar.text.toString(),
                     "categoria" to binding.txtCategoria.text.toString(),
-                    "estrella" to binding.estrellaBar.rating.toString()
+                    "estrella" to binding.estrellaBar.rating.toString().toFloat()
                 )
                 baseRemota.add(datos)
                     .addOnSuccessListener {

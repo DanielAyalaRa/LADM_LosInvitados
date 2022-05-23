@@ -6,7 +6,7 @@ class Lugar (este : Context) {
     var lugar = ""
     var descripcion = ""
     var categoria = ""
-    var estrellas = "★★★★★"
+    var estrellas = 5.0F
     var latitud = 0.0
     var longitud = 0.0
 
