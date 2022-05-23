@@ -10,6 +10,7 @@
     tools:context=".ui.inicio.InicioFragment">
     <TextView
         android:layout_width="match_parent"
+        android:id="@+id/latitud"
         android:layout_height="40dp"/>
 
     <fragment
@@ -20,6 +21,7 @@
 
     <TextView
         android:layout_width="match_parent"
+        android:id="@+id/longitud"
         android:layout_height="80dp"/>
 
 </LinearLayout>
