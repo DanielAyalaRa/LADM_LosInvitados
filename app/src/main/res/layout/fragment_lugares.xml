@@ -67,6 +67,15 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
+            <RatingBar
+                android:id="@+id/estrellaBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:stepSize="0.5"
+                android:theme="@style/Theme.Rating"
+                android:numStars="5"/>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

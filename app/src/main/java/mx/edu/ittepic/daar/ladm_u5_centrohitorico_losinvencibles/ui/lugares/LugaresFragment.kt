@@ -76,7 +76,8 @@ class LugaresFragment : Fragment() {
                     "latitud" to binding.txtLatitud.text.toString().toDouble(),
                     "longitud" to binding.txtLongitud.text.toString().toDouble(),
                     "lugar" to binding.txtLugar.text.toString(),
-                    "categoria" to binding.txtCategoria.text.toString()
+                    "categoria" to binding.txtCategoria.text.toString(),
+                    "estrella" to binding.estrellaBar.rating.toString()
                 )
                 baseRemota.add(datos)
                     .addOnSuccessListener {
@@ -86,6 +87,7 @@ class LugaresFragment : Fragment() {
                         binding.txtLatitud.text?.clear()
                         binding.txtLongitud.text?.clear()
                         binding.txtCategoria.text?.clear()
+                        binding.estrellaBar.rating = 0.0F
                     }
                     .addOnFailureListener {
                         alerta("Error... \n${it.message}")
