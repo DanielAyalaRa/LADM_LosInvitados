@@ -26,6 +26,7 @@ import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.R
 import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.clases.Data
 import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.clases.Lugar
 import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.databinding.FragmentInicioBinding
+import kotlin.math.*
 
 class InicioFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener {
     var _binding: FragmentInicioBinding? = null
@@ -82,6 +83,11 @@ class InicioFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationBut
     }
 
     fun crearMarcador() {
+        var miUbi = LatLng(21.40092967, -104.8970573)
+        map.animateCamera(CameraUpdateFactory
+            .newLatLngZoom(miUbi,18f),2000,null)
+        // Hacemos un zoom a la plaza principal de Tepic
+
         baseRemota
             .addSnapshotListener { query, error ->
                 if (error != null) {
@@ -114,22 +120,19 @@ class InicioFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationBut
                         "Mercados" -> icono = BitmapDescriptorFactory.fromResource(R.drawable.mercado)
                         else -> BitmapDescriptorFactory.fromResource(R.drawable.marcador)
                     }
+
+                    var distancia = calcularDistancia(miUbi.latitude, miUbi.longitude, Ubi.latitude,Ubi.longitude)
                     map.addMarker(
                         MarkerOptions()
                             .position(Ubi)
                             .title(lugar.lugar)
-                            .snippet(lugar.descripcion)
+                            .snippet("Distancia: ${distancia}km")
                             .icon(icono)
                             // TODO Aqui hariamos un when para separar cada una de las categorias (CHECK)
                     )
                     listaId.add(documento.id.toString())
                 }
             }
-
-        val miUbi = LatLng(21.5118208586, -104.891989711)
-        map.animateCamera(CameraUpdateFactory
-            .newLatLngZoom(miUbi,18f),2000,null)
-        // Hacemos un zoom a la plaza principal de Tepic
     }
 
     override fun onMyLocationButtonClick(): Boolean {
@@ -223,6 +226,25 @@ class InicioFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationBut
             map.isMyLocationEnabled=false
             mensaje("Para activar la localizacion ve a ajustes y acepta los permisos")
         }
+    }
+
+    private fun calcularDistancia(lat1 : Double, lon1 : Double, lat2 : Double, lon2 : Double) : Double{
+        // Convertir todas las coordenadas a radianes
+        var lat1 = gradosARadianes(lat1)
+        var lon1 = gradosARadianes(lon1)
+        var lat2 = gradosARadianes(lat2)
+        var lon2 = gradosARadianes(lon2)
+        // Aplicar fórmula
+        val RADIO_TIERRA_EN_KILOMETROS = 6371
+        var lonDelta = (lon2 - lon1)
+        var latDelta = (lat2 - lat1)
+        val distancia = RADIO_TIERRA_EN_KILOMETROS * 2 * Math.asin(sqrt(cos(lat1) * cos(lat2) * Math.pow(sin(lonDelta / 2), 2.0) + Math.pow(sin(latDelta / 2), 2.0)))
+        val d = (distancia * 10000.0).roundToInt() / 10000.0
+        return d
+    }
+
+    fun gradosARadianes(grados: Double): Double {
+        return grados * PI / 180
     }
 
     fun mensaje(cadena : String) {
