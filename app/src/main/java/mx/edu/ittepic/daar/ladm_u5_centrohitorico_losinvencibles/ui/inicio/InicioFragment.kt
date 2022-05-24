@@ -2,10 +2,8 @@ package mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.ui.inicio
 
 import android.Manifest
 import android.app.AlertDialog
-import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
-import android.location.LocationManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -24,7 +22,6 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.firebase.firestore.FirebaseFirestore
 import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.Comunicator
 import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.R
-import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.clases.Data
 import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.clases.Lugar
 import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.databinding.FragmentInicioBinding
 import kotlin.math.*
@@ -40,10 +37,9 @@ class InicioFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationBut
     private val baseRemota = FirebaseFirestore.getInstance().collection("Lugares")
     var listaId = ArrayList<String>()
     lateinit var map:GoogleMap
-    lateinit var locacion : LocationManager
     private lateinit var comm : Comunicator
-    var latitudIn :Double = 21.50718
-    var longitudeIn :Double = -104.8970573
+    var latitud = 0.0
+    var longitud = 0.0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -59,11 +55,6 @@ class InicioFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationBut
                 arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),REQUEST_CODE_LOCATION)
         }//permisos
 
-        locacion = requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        var ubi = Data(this)
-        locacion.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 01f,ubi)
-
-        cargarUbicacion()
         crearMapFragment()
 
         comm = activity as Comunicator
@@ -78,10 +69,6 @@ class InicioFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationBut
 
     private fun isLocationPermission()= ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
 
-    private fun cargarUbicacion() {
-        alerta("${binding.latitud.text.toString()} , ${binding.longitud.text.toString()}")
-    }
-
     override fun onMapReady(googleMap: GoogleMap) {
         //Mandar ubicacion al mapa
         map = googleMap
@@ -94,7 +81,10 @@ class InicioFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationBut
     }
 
     fun crearMarcador() {
-        var miUbi = LatLng(latitudIn, longitudeIn)
+        latitud = requireActivity().intent.extras!!.getDouble("LATITUD")!!
+        longitud = requireActivity().intent.extras!!.getDouble("LONGITUD")!!
+
+        var miUbi = LatLng(latitud,longitud)
         map.animateCamera(CameraUpdateFactory
             .newLatLngZoom(miUbi,18f),2000,null)
         // Hacemos un zoom a la plaza principal de Tepic*/
