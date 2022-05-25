@@ -48,11 +48,13 @@ class GaleriaFragment : Fragment() {
                     lugar.lugar = documento.getString("lugar").toString()
                     lugar.descripcion = documento.getString("descripcion").toString()
                     lugar.categoria = documento.getString("categoria").toString()
+                    lugar.estrellas = documento.getDouble("estrella").toString().toFloat()
                     lugar.latitud = documento.getDouble("latitud")!!
                     lugar.longitud = documento.getDouble("longitud")!!
 
                     vectorLugares.add(lugar)
                 }
+
 
                 val adapter = CustomAdapter(vectorLugares)
                 binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())

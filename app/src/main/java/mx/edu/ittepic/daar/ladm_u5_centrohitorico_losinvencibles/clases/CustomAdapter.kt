@@ -37,6 +37,7 @@ class CustomAdapter (private val data:List<Lugar>) : RecyclerView.Adapter<Custom
             itemTitulo.setText(lugar.lugar)
             itemCategoria.setText(lugar.categoria)
             itemEstrellas.rating = lugar.estrellas
+            itemEstrellas.isEnabled = false
             itemDescripcion.setText(lugar.descripcion)
 
             when(lugar.categoria) {
