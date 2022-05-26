@@ -13,6 +13,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -26,6 +27,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.firestore.FirebaseFirestore
 import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.Comunicator
 import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.R
+import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.clases.Distancia
 import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.clases.Lugar
 import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.databinding.FragmentInicioBinding
 import kotlin.math.*
@@ -109,32 +111,37 @@ class InicioFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationBut
                     lugar.lugar = documento.getString("lugar").toString()
                     lugar.descripcion = documento.getString("descripcion").toString()
                     lugar.categoria = documento.getString("categoria").toString()
+                    lugar.estrellas = documento.getDouble("estrella").toString().toFloat()
                     lugar.latitud = documento.getDouble("latitud")!!
                     lugar.longitud = documento.getDouble("longitud")!!
 
                     val Ubi = LatLng(lugar.latitud, lugar.longitud)
                     var icono = BitmapDescriptorFactory.fromResource(R.drawable.marcador)
 
-                    when(lugar.categoria) {
-                        "Iglesias" -> icono = BitmapDescriptorFactory.fromResource(R.drawable.iglesia)
-                        "Restaurantes" -> icono = BitmapDescriptorFactory.fromResource(R.drawable.restaurante)
+                    when (lugar.categoria) {
+                        "Iglesias" -> icono =
+                            BitmapDescriptorFactory.fromResource(R.drawable.iglesia)
+                        "Restaurantes" -> icono =
+                            BitmapDescriptorFactory.fromResource(R.drawable.restaurante)
                         "Hoteles" -> icono = BitmapDescriptorFactory.fromResource(R.drawable.hotel)
                         "Plazas" -> icono = BitmapDescriptorFactory.fromResource(R.drawable.plaza)
                         "Museos" -> icono = BitmapDescriptorFactory.fromResource(R.drawable.museo)
-                        "Edificios Administrativos" -> icono = BitmapDescriptorFactory.fromResource(R.drawable.edificio)
-                        "Tiendas Departamentales" -> icono = BitmapDescriptorFactory.fromResource(R.drawable.tienda)
+                        "Edificios Administrativos" -> icono =
+                            BitmapDescriptorFactory.fromResource(R.drawable.edificio)
+                        "Tiendas Departamentales" -> icono =
+                            BitmapDescriptorFactory.fromResource(R.drawable.tienda)
                         "Centrales" -> icono = BitmapDescriptorFactory.fromResource(R.drawable.bus)
                         "Cafes" -> icono = BitmapDescriptorFactory.fromResource(R.drawable.cafe)
-                        "Mercados" -> icono = BitmapDescriptorFactory.fromResource(R.drawable.mercado)
+                        "Mercados" -> icono =
+                            BitmapDescriptorFactory.fromResource(R.drawable.mercado)
                         else -> BitmapDescriptorFactory.fromResource(R.drawable.marcador)
                     }
 
-                    var distancia = calcularDistancia(miUbi.latitude, miUbi.longitude, Ubi.latitude,Ubi.longitude)
                     map.addMarker(
                         MarkerOptions()
                             .position(Ubi)
                             .title(lugar.lugar)
-                            .snippet("Distancia: ${distancia}km")
+                            .snippet("Reputación: ${lugar.estrellas}★")
                             .icon(icono)
                             // TODO Aqui hariamos un when para separar cada una de las categorias (CHECK)
                     )
@@ -149,7 +156,8 @@ class InicioFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationBut
     }
 
     override fun onMyLocationClick(p0: Location) {
-        mensaje("Estás en ${p0.latitude}, ${p0.longitude}")
+        estasEn(p0)
+
         comm.passData(p0.latitude,p0.longitude)
     }
 
@@ -247,7 +255,7 @@ class InicioFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationBut
         var lonDelta = (lon2 - lon1)
         var latDelta = (lat2 - lat1)
         val distancia = RADIO_TIERRA_EN_KILOMETROS * 2 * Math.asin(sqrt(cos(lat1) * cos(lat2) * Math.pow(sin(lonDelta / 2), 2.0) + Math.pow(sin(latDelta / 2), 2.0)))
-        val d = (distancia * 10000.0).roundToInt() / 10000.0
+        val d = ((distancia * 10000.0).roundToInt() / 10000.0) * 1000.0
         return d
     }
 
@@ -273,9 +281,6 @@ class InicioFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationBut
         val categoriaPop = extraInofPop.findViewById<TextInputEditText>(R.id.txtCategoriaPopUp)
         val estrellasPop = extraInofPop.findViewById<RatingBar>(R.id.estrellaBarPopUp)
 
-        lugarPop.isEnabled = false
-        descripcionPop.isEnabled=false
-        categoriaPop.isEnabled=false
         estrellasPop.isEnabled = false
 
         baseRemota.whereEqualTo("lugar", idMarker).get().addOnSuccessListener {
@@ -295,9 +300,127 @@ class InicioFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationBut
 
     }
 
+    private fun estasEn(aquiEstoy : Location) {
+        val builder = AlertDialog.Builder(requireContext())
+        val view = layoutInflater.inflate(R.layout.estas_en,null)
+
+        val estas = view.findViewById<TextView>(R.id.lugarecerca)
+        var txtdis = view.findViewById<TextView>(R.id.dis)
+        var distancia = view.findViewById<TextView>(R.id.distanciam)
+        val cerca1 = view.findViewById<TextView>(R.id.cerca1)
+        val cerca2 = view.findViewById<TextView>(R.id.cerca2)
+        val cerca3 = view.findViewById<TextView>(R.id.cerca3)
+
+        var miUbi = LatLng(aquiEstoy.latitude,aquiEstoy.longitude)
+
+        baseRemota
+            .addSnapshotListener { query, error ->
+                var vectorDistancia = ArrayList<Distancia>()
+                if (error != null) {
+                    mensaje(error.message!!)
+                    return@addSnapshotListener
+                }
+                vectorDistancia.clear()
+                for (documento in query!!) {
+                    var vector = Distancia()
+                    vector.lugar = documento.getString("lugar").toString()
+                    vector.latitud = documento.getDouble("latitud")!!
+                    vector.longitud = documento.getDouble("longitud")!!
+                    val Ubi = LatLng(vector.latitud,vector.longitud)
+
+                    var distanciam = ((calcularDistancia(miUbi.latitude, miUbi.longitude, Ubi.latitude,Ubi.longitude)* 100.0).roundToInt() / 100.0)
+                    vector.distancia = distanciam
+
+                    vectorDistancia.add(vector)
+                }// fin del for para el llenado de info
+
+                vectorDistancia.sortBy {
+                    it.distancia
+                }
+
+                var contar = 0
+                var min = vectorDistancia.minByOrNull {
+                    it.distancia
+                }
+
+                if (min != null) {
+                    if (min.distancia <= 55) {
+                        estas.setText(min.lugar)
+                        distancia.setText("${min.distancia}m")
+                        txtdis.visibility = View.VISIBLE
+                        vectorDistancia.removeAt(0)
+                    } else {
+                        estas.setText("${aquiEstoy.latitude},${aquiEstoy.longitude}")
+                        distancia.setText("")
+                        txtdis.visibility = View.INVISIBLE
+                    }
+                }
+
+                (0..vectorDistancia.size-1).forEach {
+                    println("${it} , ${vectorDistancia[it].lugar}, ${vectorDistancia[it].distancia}, contador: ${contar}")
+                    if (vectorDistancia[it].distancia >= 0.0 && vectorDistancia[it].distancia <= 55.0 && contar == 0) {
+                        cerca1.setText("${vectorDistancia[it].lugar} a ${vectorDistancia[it].distancia}m (muy cerca)")
+                        cerca1.visibility = View.VISIBLE
+                        vectorDistancia[it].distancia = 100000.0
+                        println("if 1.1")
+                        contar++
+                    }
+                    if (vectorDistancia[it].distancia >= 0.0 && vectorDistancia[it].distancia <= 55.0 && contar == 1) {
+                        cerca2.setText("${vectorDistancia[it].lugar} a ${vectorDistancia[it].distancia}m (muy cerca)")
+                        cerca2.visibility = View.VISIBLE
+                        vectorDistancia[it].distancia = 100000.0
+                        println("if 1.2")
+                        contar++
+                    }
+                    if (vectorDistancia[it].distancia >= 0.0 && vectorDistancia[it].distancia <= 55.0 && contar == 2) {
+                        cerca3.setText("${vectorDistancia[it].lugar} a ${vectorDistancia[it].distancia}m (muy cerca)")
+                        cerca3.visibility = View.VISIBLE
+                        vectorDistancia[it].distancia = 100000.0
+                        println("if 1.3")
+                        contar++
+                    }
+                    if (vectorDistancia[it].distancia > 55.0 && vectorDistancia[it].distancia <= 120.0 && contar == 0) {
+                        cerca1.setText("${vectorDistancia[it].lugar} a ${vectorDistancia[it].distancia}m")
+                        cerca1.visibility = View.VISIBLE
+                        vectorDistancia[it].distancia = 100000.0
+                        println("if 2.1")
+                        contar++
+                    }
+                    if (vectorDistancia[it].distancia > 55.0 && vectorDistancia[it].distancia <= 120.0 && contar == 1) {
+                        cerca2.setText("${vectorDistancia[it].lugar} a ${vectorDistancia[it].distancia}m")
+                        cerca2.visibility = View.VISIBLE
+                        vectorDistancia[it].distancia = 100000.0
+                        println("if 2.2")
+                        contar++
+                    }
+                    if (vectorDistancia[it].distancia > 55.0 && vectorDistancia[it].distancia <= 120.0 && contar == 2) {
+                        cerca3.setText("${vectorDistancia[it].lugar} a ${vectorDistancia[it].distancia}m")
+                        cerca3.visibility = View.VISIBLE
+                        println("if 2.3")
+                        contar++
+                    }
+                    if (contar == 0 && vectorDistancia[it].distancia > 120.0) {
+                        cerca1.setText("No hay lugares cerca")
+                        cerca2.visibility = View.INVISIBLE
+                        cerca3.visibility = View.INVISIBLE
+                    }
+                    if (contar == 1 && vectorDistancia[it].distancia > 120.0) {
+                        cerca2.visibility = View.INVISIBLE
+                        cerca3.visibility = View.INVISIBLE
+                    }
+                }
+                contar = 0
+        }// fin del add on success
+
+        with(builder){
+            setPositiveButton("Salir"){_,_ ->}
+                .setView(view)
+                .show()
+        }
+    }
+
     override fun onMarkerClick(p0: Marker): Boolean {
         mensaje("Presione la ventana de información para mas detalles")
         return false
     }
-
 }
