@@ -90,8 +90,8 @@ class InicioFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationBut
     }
 
     fun crearMarcador() {
-        latitud = requireActivity().intent.extras!!.getDouble("LATITUD")!!
-        longitud = requireActivity().intent.extras!!.getDouble("LONGITUD")!!
+        latitud = 21.51047
+        longitud = -104.89269
 
         var miUbi = LatLng(latitud,longitud)
         map.animateCamera(CameraUpdateFactory
