@@ -8,6 +8,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RatingBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -18,7 +20,9 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.firestore.FirebaseFirestore
 import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.Comunicator
 import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.R
@@ -26,7 +30,7 @@ import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.clases.Lugar
 import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.databinding.FragmentInicioBinding
 import kotlin.math.*
 
-class InicioFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener {
+class InicioFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnMyLocationClickListener, GoogleMap.OnInfoWindowClickListener, GoogleMap.OnMarkerClickListener {
     var _binding: FragmentInicioBinding? = null
     val binding get() = _binding!!
 
@@ -75,6 +79,9 @@ class InicioFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationBut
         crearMarcador()
         map.setOnMyLocationButtonClickListener(this)
         map.setOnMyLocationClickListener(this)
+        //new permission for the click on marken and over the info window
+        map.setOnInfoWindowClickListener(this)
+        map.setOnMarkerClickListener(this)
         map.uiSettings.isZoomControlsEnabled = true
         map.uiSettings.isCompassEnabled = true
         enableLocation()
@@ -137,7 +144,7 @@ class InicioFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationBut
     }
 
     override fun onMyLocationButtonClick(): Boolean {
-        mensaje("Boton pulsado")
+        //mensaje("Boton pulsado")
         return false
     }
 
@@ -252,11 +259,45 @@ class InicioFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationBut
         Toast.makeText(requireContext(), cadena, Toast.LENGTH_SHORT).show()
     }
 
-    fun alerta(cadena: String) {
-        AlertDialog.Builder(requireContext())
-            .setTitle("ATENCIÓN")
-            .setMessage(cadena)
-            .show()
+    // Sección para la construccion de los extras en la ventana
+    override fun onInfoWindowClick(p0: Marker) {
+        popUpExtrainfo(p0.title!!)
+    }
+
+    private fun popUpExtrainfo(idMarker: String) {
+        val builder = AlertDialog.Builder(requireContext())
+        val inflater = layoutInflater
+        val extraInofPop = inflater.inflate(R.layout.location_popup,null)
+        val lugarPop = extraInofPop.findViewById<TextInputEditText>(R.id.txtLugarPopUp)
+        val descripcionPop = extraInofPop.findViewById<TextInputEditText>(R.id.txtDescripcionPopUp)
+        val categoriaPop = extraInofPop.findViewById<TextInputEditText>(R.id.txtCategoriaPopUp)
+        val estrellasPop = extraInofPop.findViewById<RatingBar>(R.id.estrellaBarPopUp)
+
+        lugarPop.isEnabled = false
+        descripcionPop.isEnabled=false
+        categoriaPop.isEnabled=false
+        estrellasPop.isEnabled = false
+
+        baseRemota.whereEqualTo("lugar", idMarker).get().addOnSuccessListener {
+            for(place in it){
+                lugarPop.setText(place.getString("lugar").toString())
+                descripcionPop.setText(place.getString("descripcion").toString())
+                categoriaPop.setText(place.getString("categoria").toString())
+                estrellasPop.rating = place.getLong("estrella").toString().toFloat()
+            }// fin del for para el llenado de info
+        }// fin del add on success
+
+        with(builder){
+                setPositiveButton("Salir"){_,_ ->}
+                .setView(extraInofPop)
+                .show()
+        }
+
+    }
+
+    override fun onMarkerClick(p0: Marker): Boolean {
+        mensaje("Presione la ventana de información para mas detalles")
+        return false
     }
 
 }

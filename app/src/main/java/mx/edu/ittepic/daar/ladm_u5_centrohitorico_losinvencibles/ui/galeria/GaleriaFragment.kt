@@ -87,8 +87,8 @@ class GaleriaFragment : Fragment() {
         filtroVector.clear()
         contador = 0
 
-        (0..vectorLugares.size-1).forEach {
-            if (vectorLugares.get(it).categoria.equals(buscar)) {
+        (0 until vectorLugares.size).forEach {
+            if (vectorLugares[it].categoria.equals(buscar)) {
                 filtroVector.add(vectorLugares.get(it))
                 contador++
             }
