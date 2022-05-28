@@ -1,6 +1,10 @@
 package mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles
 
+import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
@@ -8,6 +12,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.google.firebase.auth.FirebaseAuth
 import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.databinding.ActivityMainBinding
 import mx.edu.ittepic.daar.ladm_u5_centrohitorico_losinvencibles.ui.lugares.LugaresFragment
 
@@ -43,6 +48,37 @@ class MainActivity : AppCompatActivity(), Comunicator {
         val placeFragment = LugaresFragment()
         placeFragment.arguments = bundle
         transaction.commit()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.acercade,menu)
+        return true
+    }// match del activity desde el XML
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        var integrantes = "Integrantes:\n" +
+                "16400887 DANIEL ALEJANDRO AYALA RAMIREZ\n" +
+                "16400985 BLANCA ESTEFANI RAMIREZ BARAJAS\n" +
+                "17401063 CARLOS EDUARDO ROBLES LOPEZ\n" +
+                "17400978 CARLOS URIEL FREGOSO ESPERICUETA\n"
+        when(item.itemId){
+            R.id.acercade -> {
+                AlertDialog.Builder(this)
+                    .setTitle("EQUIPO: LOS INVITADOS")
+                    .setMessage(integrantes)
+                    .setPositiveButton("Salir"){_,_ ->}
+                    .show()
+            }
+            R.id.cerrarsesión -> {
+                FirebaseAuth.getInstance().signOut()
+                startActivity(Intent(this,Login::class.java))
+                finish()
+            }
+            R.id.salir -> {
+                finish()
+            }
+        }
+        return true
     }
 }
 
