@@ -157,7 +157,6 @@ class InicioFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMyLocationBut
 
     override fun onMyLocationClick(p0: Location) {
         estasEn(p0)
-
         comm.passData(p0.latitude,p0.longitude)
     }
 
